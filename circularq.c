@@ -1,40 +1,38 @@
 #include<stdio.h>
 #define MAX 5
 
-/*Global Declaration.*/
 int f = -1, r = -1;
 
-/* Function definition for inserting an element into circular queue. */
 void insert(char cq[MAX]) {
     char elem;
     printf("\nEnter the element to insert into the queue: ");
-    scanf("\n%c", &elem); /* Use \n in scanf() to remove \n from the buffer. */
+    scanf("\n%c", &elem); 
     if ((f == 0 && r == MAX - 1) || (f == r + 1)) {
         printf("\nQueue Overflow!!!");
         return;
     }
-    if (f == -1) /* Circular queue is empty. */
+    if (f == -1) 
         f = 0;
-    r = (r + 1) % MAX; /* Points to the index of rear where element is to be inserted. */
-    cq[r] = elem; /* Insert element at rear end. */
+    r = (r + 1) % MAX; 
+    cq[r] = elem;
 }
 
-/* Function definition for deleting an element from circular queue. */
+
 void delete (char cq[MAX]) {
     if (f == -1) {
         printf("\nQueue Underflow!!!");
         return ;
     }
     printf("\nThe deleted element is: %c", cq[f]);
-    if (f == r) /* Circular queue has one element. */
+    if (f == r) 
     {
         f = -1;
         r = -1;
     } else
-        f = (f + 1) % MAX; /* Points to the index of front after the element is deleted from front. */
+        f = (f + 1) % MAX; 
 }
 
-/* Function definition for displaying elements in a circular queue. */
+
 void display(char cq[MAX]) {
     int i;
     if (f == -1) {
@@ -50,7 +48,7 @@ void display(char cq[MAX]) {
 int main() {
     int ch;
     char cq[MAX];
-    /* Infinite loop. */
+    
     for (;;) {
         printf("\n---------------------------------------------");
         printf("\nCIRCULAR QUEUE OPERATIONS");
