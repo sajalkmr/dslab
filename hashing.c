@@ -44,6 +44,6 @@ void main() {
         }
         insert(key[i]);
     }
-    // Displaying Keys inserted into hash table
+    
     display();
 }
