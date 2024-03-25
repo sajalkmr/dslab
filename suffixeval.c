@@ -1,60 +1,42 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+#include<math.h>
 
-#define MAX 100
-
-int stk[MAX];
-int top = -1;
-
-void push(int x) {
-    stk[++top] = x;
+int compute(char symbol, int op1, int op2){
+	switch(symbol){
+		case '+' : return op1+op2;
+		case '-' : return op1-op2;
+		case '*' : return op1*op2;
+		case '%' : return op1%op2;
+		case '/' : return op1/op2;
+		case '^' : return pow(op1,op2);
+	}
 }
 
-int pop() {
-    return stk[top--];
-}
-
-int evaluate(char op, int a, int b) {
-    switch (op) {
-        case '+': return b + a;
-        case '-': return b - a;
-        case '*': return b * a;
-        case '/': return b / a;
-        case '^': {
-            int result = 1;
-            for (int i = 0; i < a; i++) {
-                result *= b;
-            }
-            return result;
-        }
-        case '%': return b % a;
-        default: return 0; 
-    }
-}
-
-int main() {
-    char postfix[MAX];
-    printf("\nEnter the postfix expression to be evaluated\n");
-    scanf("%s", postfix);
-
-    for (int i = 0; postfix[i] != '\0'; i++) {
-        if (isdigit(postfix[i]))
-            push(postfix[i] - '0');
-        else if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^' || postfix[i] == '%') {
-            int a = pop();
-            int b = pop();
-            push(evaluate(postfix[i], a, b));
-        } else {
-            printf("\nNot a valid expression\n");
-            return 0;
-        }
-    }
-
-    if (top == 0)
-        printf("\nThe result of the postfix expression is %d\n", stk[top]);
-    else
-        printf("\nNot a valid postfix expression\n");
-
-    return 0;
+int main(){
+	char expression[30];
+	int stack[20];
+	int top =-1;
+	int result, final, i, op1, op2;
+	char symbol;
+	
+	printf("Enter suffix exp: \n");
+	scanf("%s", expression);
+	
+	for(int i=0; i<strlen(expression); i++){
+		symbol = expression[i];
+		if(isdigit(symbol)){
+			stack[++top] = symbol - '0';
+		}
+		else{
+			op2 = stack[top--];
+			op1 = stack[top--];
+			result = compute(symbol, op1, op2);
+			stack[++top] = result;
+		}
+	}
+	
+	final = stack[top--];
+	printf("eval: %d", final);
 }

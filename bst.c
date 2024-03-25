@@ -1,153 +1,146 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-struct tree
+struct BST
 {
     int data;
-    struct tree *left, *right;
+    struct BST* lchild;
+    struct BST* rchild;
 };
 
-typedef struct tree *TREE;
+typedef struct BST* NODE;
 
-TREE create()
+NODE create()
 {
-    TREE node;
-    node = (TREE)malloc(sizeof(struct tree));
-    if (node == NULL)
-    {
-        printf("\nMemory could not be allocated!!!");
-        return;
-    }
-    return node;
+    NODE temp;
+    temp = (NODE) malloc(sizeof(struct BST));
+    printf("Enter The value: ");
+    scanf("%d", &temp->data);
+    temp->lchild = NULL;
+    temp->rchild = NULL;
+    return temp;
 }
 
-TREE create_bst(TREE root)
+void insert(NODE root, NODE newnode)
 {
-    TREE node, prev, cur;
-    node = create();
-    printf("\nEnter the data to be inserted: ");
-    scanf("%d", &node->data);
-    node->left = NULL;
-    node->right = NULL;
-    if (root == NULL)
+    if (newnode->data < root->data)
     {
-        root = node;
-        return root;
+        if (root->lchild == NULL)
+            root->lchild = newnode;
+        else
+            insert(root->lchild, newnode);
     }
-    prev = NULL;
+    if (newnode->data > root->data)
+    {
+        if (root->rchild == NULL)
+            root->rchild = newnode;
+        else
+            insert(root->rchild, newnode);
+    }
+}
+
+void search(NODE root)
+{
+    int key;
+    NODE cur;
+    if(root == NULL)
+    {
+        printf("\nBST is empty.");
+        return;
+    }
+    printf("\nEnter Element to be searched: ");
+    scanf("%d", &key);
     cur = root;
     while (cur != NULL)
     {
-        prev = cur;
-        if (node->data < cur->data)
-            cur = cur->left;
-        else
-            cur = cur->right;
-    }
-    if (node->data < prev->data)
-        prev->left = node;
-    else
-        prev->right = node;
-    return root;
-}
-
-void inorder_traversal(TREE root)
-{
-    if (root == NULL)
-        return;
-    inorder_traversal(root->left);
-    printf("%3d", root->data);
-    inorder_traversal(root->right);
-}
-
-void preorder_traversal(TREE root)
-{
-    if (root == NULL)
-        return;
-    printf("%3d", root->data);
-    preorder_traversal(root->left);
-    preorder_traversal(root->right);
-}
-
-void postorder_traversal(TREE root)
-{
-    if (root == NULL)
-        return;
-    postorder_traversal(root->left);
-    postorder_traversal(root->right);
-    printf("%3d", root->data);
-}
-
-void search_bst(TREE root)
-{
-    int key, flag = 0;
-    TREE temp;
-    printf("\nEnter the key to be searched: ");
-    scanf("%d", &key);
-    if (root == NULL)
-        return;
-    temp = root;
-    while (temp != NULL)
-    {
-        if (key == temp->data)
+        if (cur->data == key)
         {
-            flag = 1;
-            break;
+            printf("\nKey element is present in BST");
+            return;
         }
-        else if (key < temp->data)
-            temp = temp->left;
+        if (key < cur->data)
+            cur = cur->lchild;
         else
-            temp = temp->right;
+            cur = cur->rchild;
     }
-    if (flag == 1)
-        printf("\nKey found!!!");
-    else
-        printf("\nKey not found!!!");
+    printf("\nKey element is not found in the BST");
 }
 
-int main()
+void inorder(NODE root)
 {
-    int ch, n, i;
-    TREE root = NULL;
-
-    for (;;)
+    if(root != NULL)
     {
-        printf("\n---------------------------------------------");
-        printf("\nBINARY SEARCH TREE OPERATIONS");
-        printf("\n1: Create N Integers \n2: Inorder Traversal \n3: Pre-order Traversal \n4: Post order Traversal \n5: Search for a KEY \n6: Exit");
-        printf("\n---------------------------------------------");
+        inorder(root->lchild);
+        printf("%d ", root->data);
+        inorder(root->rchild);
+    }
+}
+
+void preorder(NODE root)
+{
+    if (root != NULL)
+    {
+        printf("%d ", root->data);
+        preorder(root->lchild);
+        preorder(root->rchild);
+    }
+}
+
+void postorder(NODE root)
+{
+    if (root != NULL)
+    {
+        postorder(root->lchild);
+        postorder(root->rchild);
+        printf("%d ", root->data);
+    }
+}
+
+void main()
+{
+    int ch, i, n;
+    NODE root = NULL, newnode;
+    while(1)
+    {
+        printf("\n\n~~~~BST MENU~~~~");
+        printf("\n1.Create a BST");
+        printf("\n2.Search");
+        printf("\n3.BST Traversals: ");
+        printf("\n4.Exit");
         printf("\nEnter your choice: ");
         scanf("%d", &ch);
-        switch (ch)
+        switch(ch)
         {
-        case 1:
-            printf("\nEnter the number of integers: ");
-            scanf("%d", &n);
-            for (i = 0; i < n; i++)
-            {
-                root = create_bst(root);
-            }
-            break;
-        case 2:
-            printf("\nThe Inorder Traversal of the given BST is: ");
-            inorder_traversal(root);
-            break;
-        case 3:
-            printf("\nThe Pre-order Traversal of the given BST is: ");
-            preorder_traversal(root);
-            break;
-        case 4:
-            printf("\nThe Post order Traversal of the given BST is: ");
-            postorder_traversal(root);
-            break;
-        case 5:
-            search_bst(root);
-            break;
-        case 6:
-            return 0;
-        default:
-            printf("\nInvalid Choice!!!");
+            case 1:
+                printf("\nEnter the number of elements: ");
+                scanf("%d", &n);
+                for(i=1;i<=n;i++)
+                {
+                    newnode = create();
+                    if (root == NULL)
+                        root = newnode;
+                    else
+                        insert(root, newnode);
+                }
+                break;
+            case 2:
+                search(root);
+                break;
+            case 3:
+                if (root == NULL)
+                    printf("\nTree Is Not Created");
+                else
+                {
+                    printf("\nThe Preorder display : ");
+                    preorder(root);
+                    printf("\nThe Inorder display : ");
+                    inorder(root);
+                    printf("\nThe Postorder display : ");
+                    postorder(root);
+                }
+                break;
+            case 4:
+                exit(0);
         }
     }
-    return 0;
 }

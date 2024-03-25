@@ -1,67 +1,64 @@
-#define SIZE 50
-
-#include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
-char s[SIZE];
+char stack[100];
 int top = -1;
 
-void push(char elem) {
-   s[++top] = elem;
+void push(char x){
+	stack[++top] = x;
 }
 
-char pop() {
-   return (s[top--]); 
+char pop(){
+	if(top == -1) return -1;
+	return stack[top--];
 }
 
-int pr(char elem) {
-   switch(elem) {
-      case '#':
-         return 0;
-      case '(':  
-         return 1;
-      case '+': 
-      case '-':
-         return 2;
-      case '*':
-      case '/': 
-      case '%':
-         return 3;
-      case '^':
-         return 4;
-   }
+int priority(char x){
+	if (x== '(')            return 1;
+	if (x == '+' || x== '-')     return 2;
+	if (x == '*' || x == '/' || x=='%')  return 3;
+	if( x == '^' || x== '$')    return 4;
+	return 1;
 }
 
-void main() {
-   char infx[50], pofx[50], ch, elem;
-   int i = 0, k = 0;
 
-   printf("\n\nRead the Infix Expression ? ");
-   scanf("%s", infx);  
-   
-   push('#');
-   
-   while((ch = infx[i++]) != '\0') {
-      if(ch == '(') 
-         push(ch);
-      else if(isalnum(ch))
-         pofx[k++] = ch;
-      else if(ch == ')') {
-         while(s[top] != '(') 
-            pofx[k++] = pop();
-         elem = pop();  
-      }
-      else {
-         while(pr(s[top]) >= pr(ch))
-            pofx[k++] = pop(); 
-         push(ch);
-      }
-   }
-   
-   while(s[top] != '#')  
-      pofx[k++] = pop();
-
-   pofx[k] = '\0';
-
-   printf("\n\nGiven Infix Expn: %s Postfix Expn: %s\n", infx, pofx);
+int main(){
+	char expression[100];
+	char symbol, a;
+	printf("Enter infix: ");
+	scanf("%s", expression);
+	
+	printf("postfix expression: ");
+	
+	for( int i=0; i<strlen(expression); i++){
+		symbol = expression[i];
+		
+		if(isalnum(symbol)){
+			printf("%c ", symbol);
+		}
+		else if(symbol == '('){
+			push(symbol);
+		}
+		else if(symbol == ')'){
+			while((a=pop()) != '('){
+				printf("%c ",a);
+			}
+		}
+		else{
+			while(priority(stack[top]) >= priority(symbol)){
+				printf("%c", pop());
+			}
+			push(symbol);
+		}
+	}
+	
+	while(top != -1){
+		printf("%c", pop());
+	}
+	
+	printf("\n");
+	
+	
 }

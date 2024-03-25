@@ -24,7 +24,7 @@ int pop() {
       del = s[top];
       top = top - 1;
       return(del);
-   } 
+   }        
 }
 
 int palindrome() {
